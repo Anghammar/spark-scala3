@@ -27,6 +27,18 @@ trait Deserializer[T]:
 
 object Deserializer:
 
+  private val typeBoxedJavaMapping = Map[DataType, Class[_]](
+    BooleanType -> classOf[java.lang.Boolean],
+    ByteType -> classOf[java.lang.Byte],
+    ShortType -> classOf[java.lang.Short],
+    IntegerType -> classOf[java.lang.Integer],
+    LongType -> classOf[java.lang.Long],
+    FloatType -> classOf[java.lang.Float],
+    DoubleType -> classOf[java.lang.Double],
+    DateType -> classOf[java.lang.Integer],
+    TimestampType -> classOf[java.lang.Long],
+  )
+
   // see ScalaReflection.deserializerFor
   inline given deriveOpt[T](using
       d: Deserializer[T],
@@ -36,7 +48,7 @@ object Deserializer:
       override def inputType: DataType = d.inputType
 
       override def deserialize(path: Expression): Expression =
-        val tpe = ScalaReflection.typeBoxedJavaMapping.getOrElse(
+        val tpe = typeBoxedJavaMapping.getOrElse(
           d.inputType,
           ct.runtimeClass
         )
@@ -165,7 +177,7 @@ object Deserializer:
             d.inputType,
             true,
             WalkedTypePath(Nil),
-            (casted, _) => d.deserialize(casted)
+            casted => d.deserialize(casted)
           )
         val arrayClass = ObjectType(ct.newArray(0).getClass)
         val arrayData = UnresolvedMapObjects(mapFunction, path)
@@ -196,7 +208,7 @@ object Deserializer:
             d.inputType,
             nullable = true,
             WalkedTypePath(Nil),
-            (casted, _) => d.deserialize(casted)
+            casted => d.deserialize(casted)
           )
         UnresolvedMapObjects(mapFunction, path, Some(classOf[Seq[T]]))
 

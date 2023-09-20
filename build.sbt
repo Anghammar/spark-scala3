@@ -1,7 +1,7 @@
-ThisBuild / scalaVersion := "3.3.0"
+ThisBuild / scalaVersion := "3.3.1"
 ThisBuild / semanticdbEnabled := true
 
-val sparkVersion = "3.3.2"
+val sparkVersion = "3.5.0" // 3.3.2
 val sparkSql = ("org.apache.spark" %% "spark-sql" % sparkVersion).cross(
   CrossVersion.for3Use2_13
 )

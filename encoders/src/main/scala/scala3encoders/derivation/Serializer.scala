@@ -98,17 +98,17 @@ object Serializer:
   given Serializer[BigDecimal] with
     def inputType: DataType = ObjectType(classOf[BigDecimal])
     def serialize(inputObject: Expression): Expression =
-      createSerializerForScalaBigDecimal(inputObject)
+      createSerializerForBigDecimal(inputObject)
 
   given Serializer[java.math.BigInteger] with
     def inputType: DataType = ObjectType(classOf[java.math.BigInteger])
     def serialize(inputObject: Expression): Expression =
-      createSerializerForJavaBigInteger(inputObject)
+      createSerializerForBigInteger(inputObject)
 
   given Serializer[scala.math.BigInt] with
     def inputType: DataType = ObjectType(classOf[scala.math.BigInt])
     def serialize(inputObject: Expression): Expression =
-      createSerializerForScalaBigInt(inputObject)
+      createSerializerForBigInteger(inputObject)
 
   // TODO
   /*given Serializer[Enum[_]] with
